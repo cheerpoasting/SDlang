@@ -55,8 +55,19 @@ class SDLangErrors: #mixing variables and classes works correctly
         print(f"I couldn't find your file \"{file_path}\" : {error_code}")
         sys.exit(error_code)
     
-    
     WRITE_FAILED = "SDL-E500" #generic write
+
+def get_timestamp(format_type):
+    now = datetime.now()
+
+    if format_type == "date":
+        return now.strftime("%Y-%m-%d")
+    elif format_type == "time":
+        return now.strftime("%H:%M")
+    elif format_type == "business":
+        return now.strftime("%d %b %Y, %I:%M %p")
+    else:
+        return now.strftime("%Y-%m-%d %H:%M:%S")  # Default to full
 
 #Source Variables.
 # source_path: str #the file path for the source file
@@ -103,10 +114,11 @@ def write_output_file(content_to_save, output_path):
         sys.exit(error_code)
 
 def main():
-    print("Program \"00-controller\" began running.")
-    source_content = read_source_file("file-tobe-parsed.sdlang")
+    print(f"[{get_timestamp("business")}] Program \"00-controller\" began running.\n")
+    source_content = read_source_file("file-to-be-parsed.sdlang")
     transformed_content = transform_content(source_content)
     write_output_file(transformed_content, "final-python-file.py")
+    print(f"\n[{get_timestamp("business")}] Program \"00-controller\" finished running.")
 
 if __name__ == "__main__":
     main()
