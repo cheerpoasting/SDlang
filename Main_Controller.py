@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.01-alpha-1                                     #
+# Version Number : 00.00.01-alpha-3                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -13,15 +13,9 @@
 # ACW : Began to implement error message templates in the               #
 #   class SDLangErrors. To see an example look at                       #
 #   def handle_file_not_found, the read_source_file FileNotFound.       #
+#   Additionally, began to do unit testing with Unit Test Controller.   #
 #                                                                       #
 #########################################################################
-
-# TEMPLATE
-# Open input file
-# Transform contents (later)
-# Write Contents to output file
-
-#
 
 # COMMON FILE ERROR TYPES
 #Filenotfounderror
@@ -64,24 +58,10 @@ def get_timestamp(format_type):
         return now.strftime("%Y-%m-%d")
     elif format_type == "time":
         return now.strftime("%H:%M")
-    elif format_type == "business":
+    elif format_type == "casual":
         return now.strftime("%d %b %Y, %I:%M %p")
     else:
         return now.strftime("%Y-%m-%d %H:%M:%S")  # Default to full
-
-#Source Variables.
-# source_path: str #the file path for the source file
-# source_file #textIO, the actual source file
-# source_content: str #the textual contents of the file
-
-#Transformation Variables.
-# transformed_content: str
-# thing_to_be_transformed: str
-
-#Output Variables.
-# output_path: str #the file path for the output file
-# output_file #textIO, the actual output file
-# output_content: str # the textual contents of the output file
 
 # CODE AREA.
 
@@ -114,11 +94,11 @@ def write_output_file(content_to_save, output_path):
         sys.exit(error_code)
 
 def main():
-    print(f"[{get_timestamp("business")}] Program \"00-controller\" began running.\n")
+    print(f"[{get_timestamp("casual")}] Program \"Main_Controller\" began running.\n")
     source_content = read_source_file("file-to-be-parsed.sdlang")
     transformed_content = transform_content(source_content)
     write_output_file(transformed_content, "final-python-file.py")
-    print(f"\n[{get_timestamp("business")}] Program \"00-controller\" finished running.")
+    print(f"\n[{get_timestamp("casual")}] Program \"Main_Controller\" finished running.")
 
 if __name__ == "__main__":
     main()
