@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.01-alpha-4                                     #
+# Version Number : 00.00.01-alpha-6                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -14,6 +14,7 @@
 #   class SDLangErrors. To see an example look at                       #
 #   def handle_file_not_found, the read_source_file FileNotFound.       #
 #   Additionally, began to do unit testing with Unit Test Controller.   #
+#   Currently Implemented: File not found, File empty                   #
 #                                                                       #
 #########################################################################
 
@@ -36,16 +37,24 @@ from datetime import datetime
 class SDLangErrors: #mixing variables and classes works correctly
     
     INVALID_ENCODING = "SDL-E001"
+    
     EMPTY_FILE = "SDL-E002"
+    @staticmethod
+    def handle_empty_file(file_path, i_didnt):
+        error_code = SDLangErrors.EMPTY_FILE #calls the string 
+        print(f"I didn't {i_didnt} because the file \"{file_path}\" was empty : {error_code}")
+        sys.exit(error_code) #this is actually what exits the program
     
     READ_FAILED = "SDL-E400" #generic read
 
     PERMISSION_DENIED = "SDL-E403"
+    
     FILE_NOT_FOUND = "SDL-E404"
-
     @staticmethod #allow you to call the function without making an object
+    def handle_file_not_found(file_path, i_didnt):
+        # "i_didnt" is a string to be inserted into the error messate
         error_code = SDLangErrors.FILE_NOT_FOUND
-        print(f"I couldn't find your file \"{file_path}\" : {error_code}")
+        print(f"I didn't {i_didnt} because I couldn't find the file \"{file_path}\" : {error_code}")
         sys.exit(error_code)
     
     WRITE_FAILED = "SDL-E500" #generic write
@@ -66,8 +75,9 @@ def get_timestamp(format_type):
 
 def read_source_file(source_path):
     if not os.path.exists(source_path): #check to see if the file exists
-        print(f"I didn't transpile your program because")
-        SDLangErrors.handle_file_not_found(source_path)
+        SDLangErrors.handle_file_not_found(source_path, "transpile our program")
+    if os.path.getsize(source_path) == 0:
+        SDLangErrors.handle_empty_file(source_path, "transpile our program")
     try:
         with open(source_path, 'r', encoding='utf-8') as source_file:
             source_content = source_file.read()

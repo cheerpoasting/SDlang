@@ -3,12 +3,13 @@ import tempfile
 
 from Main_Controller import *
 
-# Initial File Opening
+# Initial File Opening.
 def test_initial_file_reading():
 
     print("⚡ Testing File Reading -- read_source_file(Correct_Filepath)")
+    test_nickname = "test_initial_file_reading"
     
-    # First, create a temportay test file
+    # First, create a temporary test file
     test_contents = "Hello, this is test content!\nLine 2\nLine 3"
     with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False) as temp_file:
         temp_file.write(test_contents)
@@ -18,10 +19,10 @@ def test_initial_file_reading():
     try: 
         result = read_source_file(temp_file_path)
         if result == test_contents:
-            print("✅ test_read_file PASSED\n")
+            print(f"✅ {test_nickname} PASSED\n")
             return True
         else:
-            print(f"💩 test_read_file FAILED: content doesn't match")
+            print(f"💩 {test_nickname} FAILED: content doesn't match")
             print(f"Expected: {test_content}")
             print(f"Got: {result}\n")
             return False
@@ -30,28 +31,63 @@ def test_initial_file_reading():
     finally:
         os.unlink(temp_file_path)
 
+# Test how the program will react if the file isn't found.
 def test_reading_nonexistent_file():
 
     print("⚡ Testing File Reading -- read_source_file(FileNotFound)")
+    test_nickname = "test_reading_nonexistent_file"
     
     # We don't need to make a file, because the point is not to find one
     fake_path = "nonexistant_file.txt"
 
     try:
         result = read_source_file(fake_path)
-        print("💩 test_reading_nonexistent_file FAILED: should have exited\n.")
+        print(f"💩 {test_nickname} FAILED: should have exited\n.")
         return False
-    except SystemExit as e:
+    except SystemExit as error_code:
         # Check if it exited with the right error code
-        if str(e) == "SDL-E404":
-            print("✅ test_reading_nonexistent_file PASSED: correctly exited with SDL-E404")
+        if str(error_code) == "SDL-E404":
+            print(f"✅ {test_nickname} PASSED: correctly exited with SDL-E404\n")
             return True
         else:
-            print(f"💩 test_reading_nonexistent_file FAILED: wrong exit code: {e}")
+            print(f"💩 {test_nickname} FAILED: wrong exit code: {error_code}\n")
             return False
-    except Exception as e:
-        print(f"💩 test_read_nonexistent_file FAILED: unexpected error: {e}")
+    except Exception as error_code:
+        print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
         return False
+
+# Test how the program will react if the initial file is empty.
+def test_initial_file_is_empty():
+
+    print("⚡ Testing File Reading -- read_source_file(FileEmpty)")
+    test_nickname = "test_initial_file_is_empty"
+
+    # We need to create a test file
+    empty_contents = "" # will make the file empty
+    
+    with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False) as empty_file:
+        empty_file.write(empty_contents)
+        empty_file_path = empty_file.name
+
+    # Test the function here
+    try:
+        result = read_source_file(empty_file_path)
+        print(f"💩 {test_nickname} FAILED: should have exited\n.")
+        return False
+    except SystemExit as error_code: #SystemExit is what "sys.exit()" gives
+        if str(error_code) == "SDL-E002":
+            print(f"✅ {test_nickname} PASSED: correctly exited with {error_code}")
+            return True
+        else:
+            print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
+            return False
+    
+    # Get rid of the temporary file
+    finally: # still part of the try block
+        os.unlink(empty_file_path)
+        
+
+    
 
 def choose_emoji(tests_passed, tests_run):
     emoji_result = (tests_passed/tests_run)
@@ -63,10 +99,11 @@ def choose_emoji(tests_passed, tests_run):
         return "😭"        
     
 
-def run_tests():
+def run_tests(): # place the name of every test here
     tests = [
         test_initial_file_reading,
-        test_reading_nonexistent_file
+        test_reading_nonexistent_file,
+        test_initial_file_is_empty
     ]
     
     passed = 0
