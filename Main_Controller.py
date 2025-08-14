@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.01-alpha-3                                     #
+# Version Number : 00.00.01-alpha-4                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -28,6 +28,7 @@
 # IMPORT AREA
 
 import sys
+import os
 from datetime import datetime
 
 # DATA STRUCTURE AREA.
@@ -40,7 +41,6 @@ class SDLangErrors: #mixing variables and classes works correctly
     READ_FAILED = "SDL-E400" #generic read
 
     PERMISSION_DENIED = "SDL-E403"
-    
     FILE_NOT_FOUND = "SDL-E404"
 
     @staticmethod #allow you to call the function without making an object
@@ -66,14 +66,14 @@ def get_timestamp(format_type):
 # CODE AREA.
 
 def read_source_file(source_path):
+    if not os.path.exists(source_path): #check to see if the file exists
+        print(f"I didn't transpile your program because")
+        SDLangErrors.handle_file_not_found(source_path)
     try:
         with open(source_path, 'r', encoding='utf-8') as source_file:
             source_content = source_file.read()
             print(f"successfully read {len(source_content)} characters from {source_path}")
             return source_content
-    except FileNotFoundError:
-        print(f"I didn't transpile your program because")
-        SDLangErrors.handle_file_not_found(source_path)
     except:
         error_code = SDLangErrors.READ_FAILED
         print(f"Read Error - {source_path} : {error_code}")
