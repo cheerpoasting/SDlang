@@ -44,7 +44,6 @@ class SDLangErrors: #mixing variables and classes works correctly
     FILE_NOT_FOUND = "SDL-E404"
 
     @staticmethod #allow you to call the function without making an object
-    def handle_file_not_found(file_path):
         error_code = SDLangErrors.FILE_NOT_FOUND
         print(f"I couldn't find your file \"{file_path}\" : {error_code}")
         sys.exit(error_code)
