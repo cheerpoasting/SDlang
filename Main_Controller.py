@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.01-alpha-6                                     #
+# Version Number : 00.00.01-alpha-7                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -14,7 +14,8 @@
 #   class SDLangErrors. To see an example look at                       #
 #   def handle_file_not_found, the read_source_file FileNotFound.       #
 #   Additionally, began to do unit testing with Unit Test Controller.   #
-#   Currently Implemented: File not found, File empty                   #
+#   Currently Implemented: File not found, File empty, unexpected       #
+#   encoding.                                                           #
 #                                                                       #
 #########################################################################
 
@@ -37,6 +38,11 @@ from datetime import datetime
 class SDLangErrors: #mixing variables and classes works correctly
     
     INVALID_ENCODING = "SDL-E001"
+    @staticmethod
+    def handle_invalid_encoding(file_path, i_didnt):
+        error_code = SDLangErrors.INVALID_ENCODING
+        print(f"I didn't {i_didnt} because the file \"{file_path}\" didn't have the format I expected : {error_code}")
+        sys.exit(error_code) #sys.exit() is "SystemExit".
     
     EMPTY_FILE = "SDL-E002"
     @staticmethod
@@ -45,7 +51,7 @@ class SDLangErrors: #mixing variables and classes works correctly
         print(f"I didn't {i_didnt} because the file \"{file_path}\" was empty : {error_code}")
         sys.exit(error_code) #this is actually what exits the program
     
-    READ_FAILED = "SDL-E400" #generic read
+    READ_FAILED = "SDL-E400" #generic read error
 
     PERMISSION_DENIED = "SDL-E403"
     
@@ -83,6 +89,9 @@ def read_source_file(source_path):
             source_content = source_file.read()
             print(f"successfully read {len(source_content)} characters from {source_path}")
             return source_content
+    except UnicodeDecodeError:
+        error_code = SDLangErrors.INVALID_ENCODING
+        SDLangErrors.handle_invalid_encoding(source_path, "transpile our program")
     except:
         error_code = SDLangErrors.READ_FAILED
         print(f"Read Error - {source_path} : {error_code}")

@@ -76,7 +76,7 @@ def test_initial_file_is_empty():
         return False
     except SystemExit as error_code: #SystemExit is what "sys.exit()" gives
         if str(error_code) == "SDL-E002":
-            print(f"✅ {test_nickname} PASSED: correctly exited with {error_code}")
+            print(f"✅ {test_nickname} PASSED: correctly exited with {error_code}\n")
             return True
         else:
             print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
@@ -86,7 +86,35 @@ def test_initial_file_is_empty():
     finally: # still part of the try block
         os.unlink(empty_file_path)
         
+# Test how the program will act if the encoding is not the expected one.
+def test_unexpected_encoding():
 
+    print("⚡ Testing File Reading -- read_source_file(FileEmpty)")
+    test_nickname = "test_unexpected_encoding"
+
+    # We need to create a test file
+    wrongly_encoded_contents = "This file has a smart quote: …" # this elipse character is not utf-8
+    
+    with tempfile.NamedTemporaryFile(mode='w', encoding='windows-1252', delete=False) as wrongly_encoded_file:
+        wrongly_encoded_file.write(wrongly_encoded_contents)
+        wrongly_encoded_file_path = wrongly_encoded_file.name
+
+    # Test Function Here
+    try:
+        result = read_source_file(wrongly_encoded_file_path)
+        print(f"💩 {test_nickname} FAILED: should have exited\n.")
+        return False
+    except SystemExit as error_code: #SystemExit is what "sys.exit()" gives
+        if str(error_code) == "SDL-E001":
+            print(f"✅ {test_nickname} PASSED: correctly exited with {error_code}\n")
+            return True
+        else:
+            print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
+            return False
+    
+    # Get rid of the temporary file
+    finally: # still part of the try block
+        os.unlink(wrongly_encoded_file_path)
     
 
 def choose_emoji(tests_passed, tests_run):
@@ -103,7 +131,8 @@ def run_tests(): # place the name of every test here
     tests = [
         test_initial_file_reading,
         test_reading_nonexistent_file,
-        test_initial_file_is_empty
+        test_initial_file_is_empty,
+        test_unexpected_encoding
     ]
     
     passed = 0
