@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.01-alpha-7                                     #
+# Version Number : 00.00.01-alpha-8                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -15,7 +15,7 @@
 #   def handle_file_not_found, the read_source_file FileNotFound.       #
 #   Additionally, began to do unit testing with Unit Test Controller.   #
 #   Currently Implemented: File not found, File empty, unexpected       #
-#   encoding.                                                           #
+#   encoding, wrong extension.                                          #
 #                                                                       #
 #########################################################################
 
@@ -50,10 +50,18 @@ class SDLangErrors: #mixing variables and classes works correctly
         error_code = SDLangErrors.EMPTY_FILE #calls the string 
         print(f"I didn't {i_didnt} because the file \"{file_path}\" was empty : {error_code}")
         sys.exit(error_code) #this is actually what exits the program
+
+    INVALID_EXTENSION = "SDL-E003"
+    @staticmethod
+    def handle_invalid_file_type(file_path, i_didnt, file_extension):
+        error_code = SDLangErrors.INVALID_EXTENSION
+        print(f"I didn't {i_didnt} because \"{file_path}\" is a \"{file_extension}\" file, : {error_code}")
+        sys.exit(error_code)
     
     READ_FAILED = "SDL-E400" #generic read error
 
     PERMISSION_DENIED = "SDL-E403"
+    #should implement at some point, but not sure how/when
     
     FILE_NOT_FOUND = "SDL-E404"
     @staticmethod #allow you to call the function without making an object
@@ -82,7 +90,13 @@ def get_timestamp(format_type):
 def read_source_file(source_path):
     if not os.path.exists(source_path): #check to see if the file exists
         SDLangErrors.handle_file_not_found(source_path, "transpile our program")
-    if os.path.getsize(source_path) == 0:
+
+    allowed_extensions = ['.sdl', '.sdlang', '.txt']
+    file_extension = os.path.splitext(source_path)[1].lower()
+    if file_extension not in allowed_extensions:
+        SDLangErrors.handle_invalid_file_type(source_path, "transpile our program", file_extension)
+    
+    if os.path.getsize(source_path) == 0: #check if file is empty
         SDLangErrors.handle_empty_file(source_path, "transpile our program")
     try:
         with open(source_path, 'r', encoding='utf-8') as source_file:
