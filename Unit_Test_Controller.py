@@ -141,10 +141,35 @@ def test_file_has_wrong_extension():
         else:
             print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
             return False
+
+def test_file_has_no_extension():
+
+    print("⚡ Testing File Reading -- read_source_file(FileWithNoExtension)")
+    test_nickname = "test_file_has_no_extension"
+
+    # We need to create a test file
+    contents = "This should have an incorrect file extension" # we make a random file
+    
+    with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False, suffix='.md') as no_extension_file:
+        no_extension_file.write(contents)
+        no_extension_path = no_extension_file.name
+
+    # Test the function here
+    try:
+        result = read_source_file(no_extension_path)
+        print(f"💩 {test_nickname} FAILED: should have exited\n.")
+        return False
+    except SystemExit as error_code: #SystemExit is what "sys.exit()" gives
+        if str(error_code) == "SDL-E003":
+            print(f"✅ {test_nickname} PASSED: correctly exited with {error_code}\n")
+            return True
+        else:
+            print(f"💩 {test_nickname} FAILED: unexpected error: {error_code}\n")
+            return False
     
     # Get rid of the temporary file
     finally: # still part of the try block
-        os.unlink(wrong_extension_path)
+        os.unlink(no_extension_path)
     
 
 #######################################################################
@@ -171,7 +196,8 @@ def run_tests(): # place the name of every test here
         test_reading_nonexistent_file,
         test_initial_file_is_empty,
         test_unexpected_encoding,
-        test_file_has_wrong_extension
+        test_file_has_wrong_extension,
+        test_file_has_no_extension
     ]
     
     passed = 0

@@ -32,46 +32,9 @@
 import sys
 import os
 from datetime import datetime
+from Error_Handling import *
 
-# DATA STRUCTURE AREA.
-
-class SDLangErrors: #mixing variables and classes works correctly
-    
-    INVALID_ENCODING = "SDL-E001"
-    @staticmethod
-    def handle_invalid_encoding(file_path, i_didnt):
-        error_code = SDLangErrors.INVALID_ENCODING
-        print(f"I didn't {i_didnt} because the file \"{file_path}\" didn't have the format I expected : {error_code}")
-        sys.exit(error_code) #sys.exit() is "SystemExit".
-    
-    EMPTY_FILE = "SDL-E002"
-    @staticmethod
-    def handle_empty_file(file_path, i_didnt):
-        error_code = SDLangErrors.EMPTY_FILE #calls the string 
-        print(f"I didn't {i_didnt} because the file \"{file_path}\" was empty : {error_code}")
-        sys.exit(error_code) #this is actually what exits the program
-
-    INVALID_EXTENSION = "SDL-E003"
-    @staticmethod
-    def handle_invalid_file_type(file_path, i_didnt, file_extension):
-        error_code = SDLangErrors.INVALID_EXTENSION
-        print(f"I didn't {i_didnt} because \"{file_path}\" is a \"{file_extension}\" file, : {error_code}")
-        sys.exit(error_code)
-    
-    READ_FAILED = "SDL-E400" #generic read error
-
-    PERMISSION_DENIED = "SDL-E403"
-    #should implement at some point, but not sure how/when
-    
-    FILE_NOT_FOUND = "SDL-E404"
-    @staticmethod #allow you to call the function without making an object
-    def handle_file_not_found(file_path, i_didnt):
-        # "i_didnt" is a string to be inserted into the error messate
-        error_code = SDLangErrors.FILE_NOT_FOUND
-        print(f"I didn't {i_didnt} because I couldn't find the file \"{file_path}\" : {error_code}")
-        sys.exit(error_code)
-    
-    WRITE_FAILED = "SDL-E500" #generic write
+# UTILITY AREA.
 
 def get_timestamp(format_type):
     now = datetime.now()
@@ -80,7 +43,7 @@ def get_timestamp(format_type):
         return now.strftime("%Y-%m-%d")
     elif format_type == "time":
         return now.strftime("%H:%M")
-    elif format_type == "casual":
+    elif format_type == 'casual':
         return now.strftime("%d %b %Y, %I:%M %p")
     else:
         return now.strftime("%Y-%m-%d %H:%M:%S")  # Default to full
@@ -110,6 +73,10 @@ def read_source_file(source_path):
         error_code = SDLangErrors.READ_FAILED
         print(f"Read Error - {source_path} : {error_code}")
         sys.exit(SDLangErrors.READ_FAILED)
+        
+def tokensize(thing_to_be_lexed):
+    print("this will lex things!")
+    return thing_to_be_lexed
 
 def transform_content(thing_to_be_transformed):
     print("contents would be transformed here in the future")
@@ -126,11 +93,12 @@ def write_output_file(content_to_save, output_path):
         sys.exit(error_code)
 
 def main():
-    print(f"[{get_timestamp("casual")}] Program \"Main_Controller\" began running.\n")
+    print(f"[{get_timestamp('casual')}] Program \"Main_Controller\" began running.\n")
     source_content = read_source_file("file-to-be-parsed.sdlang")
-    transformed_content = transform_content(source_content)
+    lexed_content = tokensize(source_content)
+    transformed_content = transform_content(lexed_content)
     write_output_file(transformed_content, "final-python-file.py")
-    print(f"\n[{get_timestamp("casual")}] Program \"Main_Controller\" finished running.")
+    print(f"\n[{get_timestamp('casual')}] Program \"Main_Controller\" finished running.")
 
 if __name__ == "__main__":
     main()
