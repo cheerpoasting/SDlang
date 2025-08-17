@@ -1,0 +1,3 @@
+(NUMBER, "3", Line 1, Column 1)
+(NUMBER, "5", Line 1, Column 3)
+(UNKNOWN, "xxy3", Line 1, Column 5)
