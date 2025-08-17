@@ -126,11 +126,11 @@ def write_output_file(content_to_save, output_path):
         sys.exit(error_code)
 
 def main():
-    print(f"[{get_timestamp("casual")}] Program \"Main_Controller\" began running.\n")
+    print(f"[{get_timestamp('casual')}] Program \"Main_Controller\" began running.\n")
     source_content = read_source_file("file-to-be-parsed.sdlang")
     transformed_content = transform_content(source_content)
     write_output_file(transformed_content, "final-python-file.py")
-    print(f"\n[{get_timestamp("casual")}] Program \"Main_Controller\" finished running.")
+    print(f"\n[{get_timestamp('casual')}] Program \"Main_Controller\" finished running.")
 
 if __name__ == "__main__":
     main()
