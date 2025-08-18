@@ -148,7 +148,7 @@ def test_file_has_no_extension():
     test_nickname = "test_file_has_no_extension"
 
     # We need to create a test file
-    contents = "This should have an incorrect file extension" # we make a random file
+    contents = "This should have an no file extension" # we make a random file
     
     with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False, suffix='.md') as no_extension_file:
         no_extension_file.write(contents)
@@ -170,8 +170,53 @@ def test_file_has_no_extension():
     # Get rid of the temporary file
     finally: # still part of the try block
         os.unlink(no_extension_path)
-    
 
+def test_tokenize_constants():
+
+    print("⚡ Testing Tokenizer -- tokenize(just_constants)")
+    test_nickname = "test_tokenize_constants"
+
+    # Create Temp File
+
+    contents = "3 3"
+
+    with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False, suffix='.txt') as tokenize_constants_file:
+        tokenize_constants_file.write(contents)
+        tokenize_constants_path = tokenize_constants_file.name
+
+    # Test Function Here
+
+    source_code = read_source_file(tokenize_constants_path)
+    lexed_content = tokenize(source_code)
+
+    if len(lexed_content) != 2:
+        print(f"💩 {test_nickname} FAILED: There should have been 2 tokens, but I found {len(lexed_content)}")
+        return False
+
+    token1 = lexed_content[0]
+    if (token1.type_of_token == "NUMBER" and
+        token1.actual_text == "3" and
+        token1.line_number == 1 and
+        token1.column_number == 1):
+        print("\tToken 1 Correct")
+    else:
+        print(f"💩 {test_nickname} FAILED: Token 1 was incorrect! Expected 'NUMBER \"3\", L1C1' but recieved {token1.type_of_token} \"{token1.actual_text}\", L{token1.line_number}C{token1.column_number}")
+        return False
+
+    token2 = lexed_content[1]
+    if (token2.type_of_token == "NUMBER" and
+        token2.actual_text == "3" and
+        token2.line_number == 1 and
+        token2.column_number == 3):
+        print("\tToken 2 Correct")
+    else:
+        print(f"💩 {test_nickname} FAILED: Token 2 was incorrect! Expected 'NUMBER \"3\", L1C3' but recieved {token2.type_of_token} \"{token2.actual_text}\", L{token2.line_number}C{token2.column_number}")
+        return False
+
+    print(f"✅ {test_nickname} PASSED: Tokens are what I expected\n")
+    return True
+
+    
 #######################################################################
 
         # FINAL LOGICAL OPERATIONS OF THE TEST SUITE
@@ -197,7 +242,8 @@ def run_tests(): # place the name of every test here
         test_initial_file_is_empty,
         test_unexpected_encoding,
         test_file_has_wrong_extension,
-        test_file_has_no_extension
+        test_file_has_no_extension,
+        test_tokenize_constants
     ]
     
     passed = 0

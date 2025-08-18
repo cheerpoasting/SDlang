@@ -80,7 +80,7 @@ def read_source_file(source_path):
         print(f"Read Error - {source_path} : {error_code}")
         sys.exit(SDLangErrors.READ_FAILED)
         
-def tokensize(thing_to_be_lexed):
+def tokenize(thing_to_be_lexed):
     print("this will lex things!")
     list_of_tokens = [] #create an empty list that the tokens will go in
 
@@ -178,7 +178,7 @@ def write_output_file(content_to_save, output_path):
 def main():
     print(f"[{get_timestamp('casual')}] Program \"Main_Controller\" began running.\n")
     source_content = read_source_file("file-to-be-parsed.sdlang")
-    lexed_content = tokensize(source_content)
+    lexed_content = tokenize(source_content)
     save_tokens_readable(lexed_content, "lexer_tokens.txt")
     transformed_content = transform_content(lexed_content)
     write_output_file(transformed_content, "final-python-file.py")
