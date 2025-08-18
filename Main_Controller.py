@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.02-alpha-2                                     #
+# Version Number : 00.00.02-alpha-3                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -11,7 +11,7 @@
 #   any way.                                                            #
 #                                                                       #
 # ACW : Began to create lexer. Can handle: white space, numbers,        #
-#   and handle unknown tokens gracefully.                               #
+#   letters, and handle unknown tokens gracefully.                      #
 #                                                                       #
 #########################################################################
 
@@ -52,6 +52,11 @@ class Token: # This will allow you to "create tokens", which have 4 peices of in
         self.actual_text = what_the_token_is
         self.line_number = line_of_token
         self.column_number = column_of_token
+
+SDLang_keywords = {
+    "ADDED": "KEYWORD_OPERATOR",
+    "TO": "KEYWORD_CONTEXTUAL"
+}
     
 
 # CODE AREA.
@@ -124,13 +129,26 @@ def tokenize(thing_to_be_lexed):
             list_of_tokens.append(new_token)
             continue
 
-##        if current_character.isalpha():
-##            character_text = ""
-##            start_line = line_number
-##            start_column = column_number
-##
-##            while position <len(thing_to_be_lexed) and thing_to_be_lexed[position].isalpha():
-##                number_text
+        if current_character.isalpha():
+            word_text = ""
+            start_line = line_number
+            start_column = column_number
+            token_type = "WORD"
+
+            while position <len(thing_to_be_lexed) and not thing_to_be_lexed[position].isspace():
+                if not thing_to_be_lexed[position].isalpha():
+                    token_type = "UNKNOWN"
+                word_text = word_text + thing_to_be_lexed[position]
+                position = position + 1
+                column_number = column_number + 1
+
+            if token_type == "WORD":
+                uppercase_word = word_text.upper()
+                if uppercase_word in SDLang_keywords:
+                    token_type = SDLang_keywords[uppercase_word]
+
+            new_token = Token(token_type, word_text.upper(), start_line, start_column)
+            list_of_tokens.append(new_token)
 
         else:
             #unknown character
