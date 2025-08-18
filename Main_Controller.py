@@ -2,7 +2,7 @@
 #                                                                       #
 #      Self-Documenting Programming Language with a focus on Business   #
 #                                                                       #
-# Version Number : 00.00.02-alpha-1                                     #
+# Version Number : 00.00.02-alpha-2                                     #
 #                                                                       #
 # Last Updated : 08 AUG 2025                                            #
 #                                                                       #
@@ -109,17 +109,28 @@ def tokenize(thing_to_be_lexed):
             number_text = "" #Initialize the token content to be added to            
             start_line = line_number # tell what line the number started on
             start_column = column_number #tell what column the number started on
+            token_type = "NUMBER"
 
             #get all consecutive digits
-            while position <len(thing_to_be_lexed) and thing_to_be_lexed[position].isdigit():
+            while position <len(thing_to_be_lexed) and not thing_to_be_lexed[position].isspace():
                 #as long as we haven't hit the end of the file and the thing we are looking at is a digit
+                if not thing_to_be_lexed[position].isdigit():
+                    token_type = "UNKNOWN"
                 number_text = number_text + thing_to_be_lexed[position]
                 position = position + 1
                 column_number = column_number + 1
 
-            new_token = Token("NUMBER", number_text, start_line, start_column)
+            new_token = Token(token_type, number_text, start_line, start_column)
             list_of_tokens.append(new_token)
             continue
+
+##        if current_character.isalpha():
+##            character_text = ""
+##            start_line = line_number
+##            start_column = column_number
+##
+##            while position <len(thing_to_be_lexed) and thing_to_be_lexed[position].isalpha():
+##                number_text
 
         else:
             #unknown character
