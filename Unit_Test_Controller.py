@@ -171,14 +171,18 @@ def test_file_has_no_extension():
     finally: # still part of the try block
         os.unlink(no_extension_path)
 
-def test_tokenize_constants():
 
-    print("⚡ Testing Tokenizer -- tokenize(just_constants)")
-    test_nickname = "test_tokenize_constants"
+############# TESTING LEXER HERE #####################################
+
+
+def test_number_of_tokens():
+
+    print("⚡ Testing Tokenizer -- tokenize(how_many)")
+    test_nickname = "test_number_of_tokens"
 
     # Create Temp File
 
-    contents = "3 3"
+    contents = "3 dog 3b b3 added"
 
     with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', delete=False, suffix='.txt') as tokenize_constants_file:
         tokenize_constants_file.write(contents)
@@ -189,33 +193,46 @@ def test_tokenize_constants():
     source_code = read_source_file(tokenize_constants_path)
     lexed_content = tokenize(source_code)
 
-    if len(lexed_content) != 2:
-        print(f"💩 {test_nickname} FAILED: There should have been 2 tokens, but I found {len(lexed_content)}")
+    if len(lexed_content) != 5:
+        print(f"💩 {test_nickname} FAILED: There should have been 5 tokens, but I found {len(lexed_content)}\n")
         return False
 
-    token1 = lexed_content[0]
-    if (token1.type_of_token == "NUMBER" and
-        token1.actual_text == "3" and
-        token1.line_number == 1 and
-        token1.column_number == 1):
-        print("\tToken 1 Correct")
-    else:
-        print(f"💩 {test_nickname} FAILED: Token 1 was incorrect! Expected 'NUMBER \"3\", L1C1' but recieved {token1.type_of_token} \"{token1.actual_text}\", L{token1.line_number}C{token1.column_number}")
-        return False
-
-    token2 = lexed_content[1]
-    if (token2.type_of_token == "NUMBER" and
-        token2.actual_text == "3" and
-        token2.line_number == 1 and
-        token2.column_number == 3):
-        print("\tToken 2 Correct")
-    else:
-        print(f"💩 {test_nickname} FAILED: Token 2 was incorrect! Expected 'NUMBER \"3\", L1C3' but recieved {token2.type_of_token} \"{token2.actual_text}\", L{token2.line_number}C{token2.column_number}")
-        return False
-
-    print(f"✅ {test_nickname} PASSED: Tokens are what I expected\n")
+    print(f"✅ {test_nickname} PASSED: there were the number of tokens I expected \n")
     return True
 
+def test_single_token(text): # helper function to create tokens
+    token = Token("UNCLASSIFIED", text, 1, 1)
+    classified = classify_tokens([token])
+    return classified[0]
+
+def test_token_types():
+    print("⚡ Testing Tokenizer -- tokenize(the_types)")
+    test_nickname = "test_token_types"
+
+    checked_tokens = 0
+    correct_tokens = 0
+
+    dictionary_of_tokens = {
+        "DOG": "WORD",
+        "ADDED": "KEYWORD_OPERATOR",
+        "5": "NUMBER",
+        "3A": "UNKNOWN",
+        "A2": "UNKNOWN"
+    }
+
+    for input_text, expected_type in dictionary_of_tokens.items():
+        actual_result = test_single_token(input_text)
+        if actual_result.token_type == expected_type.upper():
+            correct_tokens = correct_tokens + 1
+        else:
+            print(f"{input_text} was {actual_result.token_type} instead of {expected_type}")
+        checked_tokens = checked_tokens + 1
+
+    if checked_tokens == correct_tokens:
+        print(f"✅ {test_nickname} PASSED: each token was what I expected \n")
+        return True
+    else:
+        return False
     
 #######################################################################
 
@@ -243,7 +260,8 @@ def run_tests(): # place the name of every test here
         test_unexpected_encoding,
         test_file_has_wrong_extension,
         test_file_has_no_extension,
-        test_tokenize_constants
+        test_number_of_tokens,
+        test_token_types
     ]
     
     passed = 0
