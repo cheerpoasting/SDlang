@@ -57,6 +57,10 @@ SDLang_keywords = {
     "ADDED": "KEYWORD_OPERATOR",
     "TO": "KEYWORD_CONTEXTUAL"
 }
+
+# PARSING AREA.
+
+#def visualize_parsing():
     
 
 # CODE AREA.
@@ -75,7 +79,6 @@ def read_source_file(source_path):
     try:
         with open(source_path, 'r', encoding='utf-8') as source_file:
             source_content = source_file.read()
-            print(f"successfully read {len(source_content)} characters from {source_path}")
             return source_content
     except UnicodeDecodeError:
         error_code = SDLangErrors.INVALID_ENCODING
@@ -86,7 +89,6 @@ def read_source_file(source_path):
         sys.exit(SDLangErrors.READ_FAILED)
         
 def tokenize(thing_to_be_lexed):
-    print("this will lex things!")
     list_of_tokens = [] #create an empty list that the tokens will go in
 
     position = 0
@@ -99,14 +101,14 @@ def tokenize(thing_to_be_lexed):
         # Handle whitespace !!! "" is empty string, " " is space
         if current_character == " " or current_character =="\t": # if the character is space or tab
             column_number = column_number + 1 #just move to the next character
-            position = position +1 #tell the program we moved to the next character
+            position = position + 1 #tell the program we moved to the next character
             continue
 
         # Handle newline
         if current_character == "\n":
             line_number = line_number + 1 #increment to next line
             column_number = 1 #reset to first column of line
-            position = position +1 # tell the program we moved to the next character
+            position = position + 1 # tell the program we moved to the next character
             continue
 
         else:
@@ -144,63 +146,6 @@ def classify_tokens(tokens_to_be_classified):
     
     return tokens_to_be_classified
 
-        # Handle digits
-##        if current_character.isdigit():
-##            number_text = "" #Initialize the token content to be added to            
-##            start_line = line_number # tell what line the number started on
-##            start_column = column_number #tell what column the number started on
-##            token_type = "NUMBER"
-##
-##            #get all consecutive digits
-##            while position <len(thing_to_be_lexed) and not thing_to_be_lexed[position].isspace():
-##                #as long as we haven't hit the end of the file and the thing we are looking at is a digit
-##                if not thing_to_be_lexed[position].isdigit():
-##                    token_type = "UNKNOWN"
-##                number_text = number_text + thing_to_be_lexed[position]
-##                position = position + 1
-##                column_number = column_number + 1
-##
-##            new_token = Token(token_type, number_text, start_line, start_column)
-##            list_of_tokens.append(new_token)
-##            continue
-##
-##        if current_character.isalpha():
-##            word_text = ""
-##            start_line = line_number
-##            start_column = column_number
-##            token_type = "WORD"
-##
-##            while position <len(thing_to_be_lexed) and not thing_to_be_lexed[position].isspace():
-##                if not thing_to_be_lexed[position].isalpha():
-##                    token_type = "UNKNOWN"
-##                word_text = word_text + thing_to_be_lexed[position]
-##                position = position + 1
-##                column_number = column_number + 1
-##
-##            if token_type == "WORD":
-##                uppercase_word = word_text.upper()
-##                if uppercase_word in SDLang_keywords:
-##                    token_type = SDLang_keywords[uppercase_word]
-##
-##            new_token = Token(token_type, word_text.upper(), start_line, start_column)
-##            list_of_tokens.append(new_token)
-##
-##        else:
-##            #unknown character
-##            unknown_text = ""
-##            start_line = line_number
-##            start_column = column_number
-##            
-##            while (position < len(thing_to_be_lexed) and not thing_to_be_lexed[position].isspace()):
-##                unknown_text = unknown_text + thing_to_be_lexed[position]
-##                position = position + 1
-##                column_number = column_number + 1
-##
-##            unknown_token = Token("UNKNOWN", unknown_text, start_line, start_column)
-##            list_of_tokens.append(unknown_token)
-##            continue
-        
-
 
 def save_tokens_readable(tokens, filename):
     try:
@@ -217,6 +162,17 @@ def save_tokens_readable(tokens, filename):
 def transform_content(thing_to_be_transformed):
     print("contents would be transformed here in the future")
     return thing_to_be_transformed
+
+##so maybe it will go token by token, and each token can become a node,
+##if there is no other rule associated associated with it.
+##then, when I hit a keyword, I then look for its arguments, and
+##in this case "to" is an argument of "added"?
+##
+##so, maybe I will first want to create a visual way of representing
+##the "level" of tokens, so that I can confirm if they are being
+##manipulated correctly?
+
+
 
 def write_output_file(content_to_save, output_path):
     try:
