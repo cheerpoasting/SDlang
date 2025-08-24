@@ -2,5 +2,5 @@
 def some_kinda():
  	pass
  
-def main():
+def another_kinda():
  	pass

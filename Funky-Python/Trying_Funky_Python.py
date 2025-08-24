@@ -1,3 +1,5 @@
+import sys
+
 class Token:
     def __init__ (self, token_type, actual_text, line_number, column_number, token_subtype=None, period_consumed=False):
         self.token_type = token_type
@@ -40,22 +42,8 @@ def write_useable_python(content_to_save, file_name):
 KEYWORD_LOOKUP_SUBTYPE = {
     "OVERVIEW": "MAIN",
     "TODO": "PASS",
-    "PARAGRAPH": "FUNCTION"
-}
-
-KEYWORD_LOOKUP_ARGUMENTS = {
-    "OVERVIEW": {
-        "NUMBER": 1,
-        "CALL": ""
-    },
-    "TODO": {
-        "NUMBER": 1,
-        "CONSUME PERIOD": True
-    },
-    "PARAGRAPH": {
-        "NUMBER": 1,
-        "CALL": ""
-    }
+    "PARAGRAPH": "FUNCTION",
+    "WENT": "FUNCTION",
 }
 
 SPECIAL_LOOKUP = {
@@ -68,11 +56,6 @@ SPECIAL_LOOKUP = {
         "token_subtype": "PERIOD"
     }
 }
-
-#def translate(content_to_translate):
-#tokenize
-#classify
-#parse
 
 # "normalize" content at some point
 
@@ -509,7 +492,8 @@ def format_contents(content_to_format):
                 continue
 
             else:
-                print(cry)
+                position = position + 1
+                sys.exit(f"unreacognized token: {current}")
 
     return formatted_contents
             
@@ -519,19 +503,19 @@ def main():
     tokenized_python = tokenize(verbose_python)
     classified_python = classify(tokenized_python)
     functional_python = find_functions(classified_python)
-    #print(functional_python)   
+    print(functional_python)   
     bundled_python = bundle_functions(functional_python)
  
-    print(bundled_python)
+    #print(bundled_python)
 
-    print("\n===FORMATTING CONTENTS===\n")
+    #print("\n===FORMATTING CONTENTS===\n")
 
     sorted_python = sort_bundled_functions_clearly(bundled_python)
-    print(sorted_python)
+    #print(sorted_python)
 
-    print("\n===FORMATTING CONTENTS===\n")
+    #print("\n===FORMATTING CONTENTS===\n")
     formatted_python = format_contents(sorted_python)
-    print(formatted_python)
+    #print(formatted_python)
 
     
     joined_python = " ".join(token.actual_text for token in formatted_python)
