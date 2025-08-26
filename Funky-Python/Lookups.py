@@ -1,0 +1,7 @@
+SPECIAL_LOOKUP = {
+    ".":"PERIOD"
+}
+
+KEYWORD_LOOKUP = {
+    "OVERVIEW": "MAIN"
+}

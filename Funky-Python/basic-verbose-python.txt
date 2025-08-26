@@ -1,9 +1,12 @@
-overview.
-went to some-kinda paragraph.
+overview. #this would be "main" in python. It runs automatically from top to bottom.
+"hello jon"
+went to some-kinda paragraph. #this is a function call.
 went to another-kinda paragraph.
+the program ended. # this is equivalent to a "Stop run" in COBOL
 
-some-kinda paragraph.
-todo.
+some-kinda paragraph. #this is the name of a paragraph
+todo. #basically a "pass" statement
+
 
 another-kinda paragraph.
-todo.
+added 5 to 7 giving total-amount this is an assignment total-amount = 7+5
