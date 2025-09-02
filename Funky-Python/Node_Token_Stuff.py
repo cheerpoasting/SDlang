@@ -1,3 +1,5 @@
+from Lookups import *
+
 # Lexer.
 
 class Lexer:
@@ -184,6 +186,10 @@ class Parser:
         self.position = 0
 
     def current_token(self):
+        while (self.position < len(self.tokens) and
+               isinstance(self.tokens[self.position], CommentToken)):
+            self.position += 1
+            
         if self.position < len(self.tokens):
             return self.tokens[self.position]
         return None
@@ -193,9 +199,15 @@ class Parser:
             self.position += 1
         return None
 
-    def peek(self):
-        if self.position + 1< len(self.tokens):
-            return self.tokens[self.position + 1]
+    def peek(self, amount=1): # Can now peek forward and backwards
+        if 0 <= (self.position + amount) < len(self.tokens):
+            # You can do two checks on the same line
+            return self.tokens[self.position + amount]
+        return None
+
+class FirstPasser(Parser):
+    def __init__(self, token):
+        super().__init__()
 
 
 # Nodes. 
@@ -209,7 +221,6 @@ class Node:
 
     def get_children(self):
         return self.children
-    
 
 class ProgramNode(Node):
     def __init__(self):
@@ -217,7 +228,41 @@ class ProgramNode(Node):
         self.node_type = "PROGRAM"
 
 class ParagraphNode(Node):
-    def __init__(self):
+
+    def __init__(self, name):
         super().__init__()
         self.node_type = "PARAGRAPH"
-        
+        self.name = name
+
+    def __repr__(self):
+        return f"def {self.name}"
+
+class CallNode(Node): # Represents Function Calls
+
+    def __init__(self, name):
+        super().__init__()
+        self.node_type = "CALL"
+        self.name = name
+
+    def __repr__(self):
+        return f"call {self.name}"
+
+class FunctionNode(Node): # Represents functions like "pass"
+
+    def __init__(self, name):
+        super().__init__()
+        self.node_type = "FUNCTION"
+        self.name = name
+
+    def __repr__(self):
+        return f"{self.name}"
+
+class CommentNode(Node): # Represents functions like "pass"
+
+    def __init__(self, text):
+        super().__init__()
+        self.node_type = "Comment"
+        self.text = text
+
+    def __repr__(self):
+        return f"\"{self.text}\""

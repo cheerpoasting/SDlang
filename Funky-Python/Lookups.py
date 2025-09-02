@@ -3,5 +3,8 @@ SPECIAL_LOOKUP = {
 }
 
 KEYWORD_LOOKUP = {
-    "OVERVIEW": "MAIN"
+    "OVERVIEW": "YES",
+    "PARAGRAPH": "YES",
+    "TODO": "YES",
+    "PROGRAM": "YES"
 }

@@ -5,8 +5,10 @@ went to another-kinda paragraph.
 the program ended. # this is equivalent to a "Stop run" in COBOL
 
 some-kinda paragraph. #this is the name of a paragraph
+went to another-kinda paragraph.
 todo. #basically a "pass" statement
 
 
 another-kinda paragraph.
-added 5 to 7 giving total-amount this is an assignment total-amount = 7+5
+added 5 to 7 giving total-amount. #this is an assignment total-amount = 7+5
+todo.
